@@ -9,4 +9,7 @@ name = "prime"
 crate-type = ["cdylib"]
 
 [dependencies]
-pyo3 = "0.23.1"
+numpy = "0.23.0"
+pyo3 = { version = "0.23.1", features = ["extension-module"] }
+rustfft = "6.2.0"
+

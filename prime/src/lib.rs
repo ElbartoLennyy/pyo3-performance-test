@@ -1,9 +1,9 @@
 use pyo3::prelude::*;
+use rustfft::{FftPlanner, num_complex::Complex32};
 
-#[pyfunction]
-fn get_primes(limit: usize) -> PyResult<Vec<usize>> {
+fn generate_primes(limit: usize) -> Vec<usize> {
     if limit < 2 {
-        return Ok(Vec::new());
+        return Vec::new();
     }
     
     let mut primes = vec![true; limit + 1];
@@ -18,14 +18,92 @@ fn get_primes(limit: usize) -> PyResult<Vec<usize>> {
         }
     }
     
-    Ok((2..=limit)
+    (2..=limit)
         .filter(|&i| primes[i])
-        .collect())
+        .collect()
 }
+#[pyfunction]
+fn get_primes(limit: usize) -> PyResult<Vec<usize>> {
+    Ok(generate_primes(limit))
+}
+
+#[pyfunction]
+fn get_last_prime(limit: usize) -> PyResult<usize> {
+    Ok(generate_primes(limit).last().copied().unwrap_or(0))
+}
+#[pyfunction]
+fn sum_primes(limit: usize) -> PyResult<usize> {
+    Ok(generate_primes(limit).iter().sum())
+}
+
+#[pyfunction]
+fn sum_array(arr: Vec<usize>) -> PyResult<usize> {
+    Ok(arr.iter().sum())
+}
+#[pyfunction]
+fn fft_convolve(signal: Vec<f32>, kernel: Vec<f32>) -> Vec<f32> {
+    // Calculate needed size for linear convolution
+    let conv_length = signal.len() + kernel.len() - 1;
+    
+    // Calculate next power of 2 for efficient FFT (optional, but typically beneficial)
+    let mut fft_size = 1;
+    while fft_size < conv_length {
+        fft_size <<= 1;
+    }
+
+    // Prepare complex buffers with zero-padding
+    let mut signal_buffer = vec![Complex32::new(0.0, 0.0); fft_size];
+    let mut kernel_buffer = vec![Complex32::new(0.0, 0.0); fft_size];
+    
+    // Copy real data into complex buffer
+    for (i, &val) in signal.iter().enumerate() {
+        signal_buffer[i].re = val;
+    }
+    for (i, &val) in kernel.iter().enumerate() {
+        kernel_buffer[i].re = val;
+    }
+    
+    // Create forward & inverse FFT plans
+    let mut planner = FftPlanner::<f32>::new();
+    let fft = planner.plan_fft_forward(fft_size);
+    let ifft = planner.plan_fft_inverse(fft_size);
+    
+    // Perform forward FFT on both buffers
+    fft.process(&mut signal_buffer);
+    fft.process(&mut kernel_buffer);
+
+    // Multiply the frequency-domain signals
+    for i in 0..fft_size {
+        let s = signal_buffer[i];
+        let k = kernel_buffer[i];
+        // (a + bi)(c + di) = (ac - bd) + (ad + bc)i
+        signal_buffer[i] = Complex32::new(
+            s.re * k.re - s.im * k.im,
+            s.re * k.im + s.im * k.re
+        );
+    }
+
+    // Inverse FFT to get back time-domain data
+    ifft.process(&mut signal_buffer);
+
+    // Convert the complex result to real and normalize by fft_size
+    // (rustfft does not automatically scale the output)
+    let mut output = vec![0.0_f32; conv_length];
+    for i in 0..conv_length {
+        output[i] = signal_buffer[i].re / (fft_size as f32);
+    }
+
+    output
+}
+
 
 /// A Python module implemented in Rust.
 #[pymodule]
 fn prime(m: &Bound<'_, PyModule>) -> PyResult<()> {
     m.add_function(wrap_pyfunction!(get_primes, m)?)?;
+    m.add_function(wrap_pyfunction!(get_last_prime, m)?)?;
+    m.add_function(wrap_pyfunction!(sum_primes, m)?)?;
+    m.add_function(wrap_pyfunction!(sum_array, m)?)?;
+    m.add_function(wrap_pyfunction!(fft_convolve, m)?)?;
     Ok(())
 }
