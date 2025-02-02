@@ -1,11 +1,23 @@
 import pandas as pd
 import matplotlib.pyplot as plt
+import numpy as np
 
-def plot_benchmarks(csv_file="benchmark_results.csv"):
-    # Read the CSV file into a DataFrame
-    df = pd.read_csv(csv_file)
+def plot_benchmarks(mac_csv="benchmark_results.csv", win_csv="benchmark_results_win.csv"):
+    # Read both CSV files into DataFrames
+    df_mac = pd.read_csv(mac_csv)
+    df_win = pd.read_csv(win_csv)
+    
+    # Add platform column to distinguish between Mac and Windows
+    df_mac['Platform'] = 'M1 Mac'
+    df_win['Platform'] = 'Windows'
+    
+    # Combine the dataframes
+    df = pd.concat([df_mac, df_win], ignore_index=True)
 
-    names = ['getprimes', 'lastprime', 'sumprimes', 'array_count','convolve','return','estimate_pi']
+    names = ['getprimes', 'lastprime', 'sumprimes', 'array_count', 'convolve', 'return', 'estimate_pi']
+
+    # Set up a color cycle
+    colors = plt.cm.tab10(np.linspace(0, 1, 10))
 
     # We assume the CSV has the following columns:
     # ['Function_Name', 'Type', 'N', 'Average_Time', 'Output_Length']
@@ -22,23 +34,56 @@ def plot_benchmarks(csv_file="benchmark_results.csv"):
        
         # Only create plot if we have data
         if not prime_df.empty:
-            plt.figure(figsize=(10, 6))
-            for t in prime_df['Type'].unique():
-                subset = prime_df[prime_df['Type'] == t].sort_values(by='N')
-                plt.plot(subset['N'], subset['Average_Time'], marker='o', label=t)
+            # Create figure with two subplots side by side
+            fig, (ax1, ax2) = plt.subplots(1, 2, figsize=(20, 8))
+            
+            # Get unique implementation types
+            implementations = prime_df['Type'].unique()
+            
+            # Create a color dictionary to maintain consistent colors
+            color_dict = {impl: color for impl, color in zip(implementations, colors)}
+            
+            # Plot Mac data (left subplot)
+            for t in implementations:
+                mac_data = prime_df[(prime_df['Type'] == t) & (prime_df['Platform'] == 'M1 Mac')].sort_values(by='N')
+                if not mac_data.empty:
+                    ax1.plot(mac_data['N'], mac_data['Average_Time'], 
+                            color=color_dict[t],
+                            marker='o', 
+                            label=t)
+            
+            ax1.set_xlabel('N')
+            ax1.set_ylabel('Average Time (s)')
+            ax1.set_title(f'M1 Mac: {name} Variants')
+            ax1.set_xscale('log')
+            ax1.set_yscale('log')
+            ax1.grid(True)
+            ax1.legend()
 
-            plt.xlabel('N')
-            plt.ylabel('Average Time (s)')
-            plt.title(f'Performance Comparison: {name} Variants')
-            plt.xscale('log')  # Set the x-axis to log scale
-            plt.yscale("log")
-            plt.legend()
-            plt.grid(True)
+            # Plot Windows data (right subplot)
+            for t in implementations:
+                win_data = prime_df[(prime_df['Type'] == t) & (prime_df['Platform'] == 'Windows')].sort_values(by='N')
+                if not win_data.empty:
+                    ax2.plot(win_data['N'], win_data['Average_Time'], 
+                            color=color_dict[t],
+                            marker='s', 
+                            label=t)
+            
+            ax2.set_xlabel('N')
+            ax2.set_ylabel('Average Time (s)')
+            ax2.set_title(f'Windows: {name} Variants')
+            ax2.set_xscale('log')
+            ax2.set_yscale('log')
+            ax2.grid(True)
+            ax2.legend()
+
+            # Adjust layout and save
+            plt.suptitle(f'Performance Comparison: {name} Variants', y=1.02, fontsize=14)
             plt.tight_layout()
-            plt.savefig(f'plots/{name}_performance.png', dpi=300)
+            plt.savefig(f'plots/{name}_performance_comparison.png', dpi=300, bbox_inches='tight')
             plt.close()
 
-            print(f"Plot saved as {name}_performance.png")
+            print(f"Plot saved as {name}_performance_comparison.png")
         else:
             print(f"No data found for {name}")
 
