@@ -5,7 +5,7 @@ def plot_benchmarks(csv_file="benchmark_results.csv"):
     # Read the CSV file into a DataFrame
     df = pd.read_csv(csv_file)
 
-    names = ['getprimes', 'lastprime', 'sumprimes', 'array_count','convolve','return']
+    names = ['getprimes', 'lastprime', 'sumprimes', 'array_count','convolve','return','estimate_pi']
 
     # We assume the CSV has the following columns:
     # ['Function_Name', 'Type', 'N', 'Average_Time', 'Output_Length']

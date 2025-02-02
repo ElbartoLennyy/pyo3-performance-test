@@ -71,3 +71,15 @@ def fft_convolve(signal: np.ndarray, kernel: np.ndarray) -> np.ndarray:
     return convolved_real
 
 
+def estimate_pi_numpy(limit):
+    """
+    Estimate π using NumPy vectorized operations.
+    
+    Two arrays of uniformly distributed numbers in [-1, 1] are generated,
+    and the fraction of points within the unit circle is computed.
+    """
+    x = np.random.uniform(-1, 1, limit)
+    y = np.random.uniform(-1, 1, limit)
+    # Create a boolean mask for points inside the circle.
+    hits = np.sum(x*x + y*y <= 1.0)
+    return 4.0 * hits / limit
