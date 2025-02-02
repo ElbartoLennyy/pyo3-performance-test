@@ -9,8 +9,8 @@ from prime import sum_primes as sum_primes_rust
 from prime import sum_array as sum_array_rust
 from prime import fft_convolve as fft_convolve_rust
 from prime import estimate_pi_rust 
-from w_numpy import get_primes as get_primes_numpy, get_last_prime as get_last_prime_numpy, sum_primes as sum_primes_numpy, fft_convolve as fft_convolve_numpy, estimate_pi_numpy
-from wo_rust import get_primes as get_primes_wo_rust, get_last_prime as get_last_prime_wo_rust, sum_primes as sum_primes_wo_rust, estimate_pi_raw
+from w_numpy import get_primes as get_primes_numpy, get_last_prime as get_last_prime_numpy, sum_primes as sum_primes_numpy, fft_convolve as fft_convolve_numpy
+from wo_rust import get_primes as get_primes_wo_rust, get_last_prime as get_last_prime_wo_rust, sum_primes as sum_primes_wo_rust, estimate_pi_raw_multi_thread as estimate_pi_raw_multi_thread, estimate_pi_raw_single_thread as estimate_pi_raw_single_thread
 
 import numpy as np
 def sum_primes_rs_calling_in_python(limit: int) -> int:
@@ -108,11 +108,11 @@ with open('benchmark_results.csv', 'w', newline='', encoding='utf-8') as csvfile
         avg_time, avg_memory, out_len = benchmark_function(estimate_pi_rust, {'limit':n}, name="Rust_estimate_pi")
         writer.writerow([estimate_pi_rust.__name__, "Rust_estimate_pi", n, avg_time, avg_memory, out_len])
 
-        avg_time, avg_memory, out_len = benchmark_function(estimate_pi_numpy, {'limit':n}, name="Numpy_estimate_pi")
-        writer.writerow([estimate_pi_numpy.__name__, "Numpy_estimate_pi", n, avg_time, avg_memory, out_len])
+        avg_time, avg_memory, out_len = benchmark_function(estimate_pi_raw_multi_thread, {'limit':n}, name="Python_estimate_pi")
+        writer.writerow([estimate_pi_raw_multi_thread.__name__, "Python_estimate_pi", n, avg_time, avg_memory, out_len])
 
-        avg_time, avg_memory, out_len = benchmark_function(estimate_pi_raw, {'limit':n}, name="Python_estimate_pi")
-        writer.writerow([estimate_pi_raw.__name__, "Python_estimate_pi", n, avg_time, avg_memory, out_len])
+        avg_time, avg_memory, out_len = benchmark_function(estimate_pi_raw_single_thread, {'limit':n}, name="Python_estimate_pi_single_thread")
+        writer.writerow([estimate_pi_raw_single_thread.__name__, "Python_estimate_pi_single_thread", n, avg_time, avg_memory, out_len])
 
 
     for conv_size in convolve_values:

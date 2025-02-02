@@ -27,7 +27,7 @@ def get_len_of_array(arr: list[int]) -> int:
 def sum_primes(limit: int) -> int:
     return sum(get_primes(limit))
 
-def estimate_pi_raw(limit, num_threads=4):
+def estimate_pi_raw_multi_thread(limit, num_threads=4):
     """
     Estimate π using the Monte Carlo method with raw Python threads.
     
@@ -58,3 +58,6 @@ def estimate_pi_raw(limit, num_threads=4):
     
     total_hits = sum(results)
     return 4.0 * total_hits / limit
+
+def estimate_pi_raw_single_thread(limit):
+    return estimate_pi_raw_multi_thread(limit, 1)
