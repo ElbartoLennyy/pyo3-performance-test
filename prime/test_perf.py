@@ -60,7 +60,7 @@ def benchmark_function(func, n, name, iterations=5):
 # Define the range of n values you want to test.
 # Running a full sequence from 1 to 10**8 would be extremely time-consuming.
 # Here we pick a selection of sizes.
-n_values = [2, 10, 100, 1000, 10**5, 10**6, 10**7, 10**8]
+n_values = [2, 10, 100, 1000, 10**4,10**5, 10**6, 10**7, 10**8]
 convolve_values = [[16,4],[16**2,4**2],[16**3,4**3],[16**4,4**4],[16**5,4**5],[16**6,4**6]]
 
 # Prepare a CSV file to store the results
