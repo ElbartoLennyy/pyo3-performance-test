@@ -1,5 +1,16 @@
 import random
 import threading
+import multiprocessing
+from multiprocessing import Pool
+
+def worker(n, index, results):
+    hits = 0
+    for _ in range(n):
+        x = random.uniform(-1, 1)
+        y = random.uniform(-1, 1)
+        if x * x + y * y <= 1.0:
+            hits += 1
+    results[index] = hits
 
 def get_primes(limit: int) -> list[int]:
     if limit < 2:
@@ -61,3 +72,38 @@ def estimate_pi_raw_multi_thread(limit, num_threads=4):
 
 def estimate_pi_raw_single_thread(limit):
     return estimate_pi_raw_multi_thread(limit, 1)
+
+def _monte_carlo_worker(args):
+    """Helper function for parallel Monte Carlo estimation"""
+    n, seed = args
+    random.seed(seed)
+    hits = 0
+    for _ in range(n):
+        x = random.uniform(-1, 1)
+        y = random.uniform(-1, 1)
+        if x * x + y * y <= 1.0:
+            hits += 1
+    return hits
+
+def estimate_pi_raw_multi_processing(limit, num_processes=4):
+    """
+    Estimate π using the Monte Carlo method with multiple processes.
+    
+    This method utilizes the multiprocessing module to perform CPU-bound operations in parallel.
+    """
+    samples_per_process = limit // num_processes
+    
+    # Create work items with different seeds
+    work_items = []
+    for i in range(num_processes):
+        # The last process takes any extra samples
+        count = samples_per_process if i < num_processes - 1 else limit - samples_per_process * (num_processes - 1)
+        work_items.append((count, random.randint(0, 10000) + i))
+    
+    # Use Pool for better process management
+    with Pool(processes=num_processes) as pool:
+        results = pool.map(_monte_carlo_worker, work_items)
+    
+    total_hits = sum(results)
+    return 4.0 * total_hits / limit
+
