@@ -74,36 +74,36 @@ with open('benchmark_results.csv', 'w', newline='', encoding='utf-8') as csvfile
         freeze_support()
         for n in n_values:
 
-            # # get_last_prime variants
-            # avg_time, avg_memory, out_len = benchmark_function(get_last_prime_rs, {'limit':n}, name="Rust_lastprime")
-            # writer.writerow([get_last_prime_rs.__name__, "Rust_lastprime", n, avg_time, avg_memory, out_len])
+            # get_last_prime variants
+            avg_time, avg_memory, out_len = benchmark_function(get_last_prime_rs, {'limit':n}, name="Rust_lastprime")
+            writer.writerow([get_last_prime_rs.__name__, "Rust_lastprime", n, avg_time, avg_memory, out_len])
 
-            # avg_time, avg_memory, out_len = benchmark_function(get_last_prime_numpy, {'limit':n}, name="Numpy_lastprime")
-            # writer.writerow([get_last_prime_numpy.__name__, "Numpy_lastprime", n, avg_time, avg_memory, out_len])
+            avg_time, avg_memory, out_len = benchmark_function(get_last_prime_numpy, {'limit':n}, name="Numpy_lastprime")
+            writer.writerow([get_last_prime_numpy.__name__, "Numpy_lastprime", n, avg_time, avg_memory, out_len])
 
-            # avg_time, avg_memory, out_len = benchmark_function(get_last_prime_wo_rust, {'limit':n}, name="Python_lastprime")
-            # writer.writerow([get_last_prime_wo_rust.__name__, "Python_lastprime", n, avg_time, avg_memory, out_len])
+            avg_time, avg_memory, out_len = benchmark_function(get_last_prime_wo_rust, {'limit':n}, name="Python_lastprime")
+            writer.writerow([get_last_prime_wo_rust.__name__, "Python_lastprime", n, avg_time, avg_memory, out_len])
 
-            # # sum_primes variants
-            # avg_time, avg_memory, out_len = benchmark_function(sum_primes_rust, {'limit':n}, name="Rust_sumprimes")
-            # writer.writerow([sum_primes_rust.__name__, "Rust_sumprimes", n, avg_time, avg_memory, out_len])
+            # sum_primes variants
+            avg_time, avg_memory, out_len = benchmark_function(sum_primes_rust, {'limit':n}, name="Rust_sumprimes")
+            writer.writerow([sum_primes_rust.__name__, "Rust_sumprimes", n, avg_time, avg_memory, out_len])
 
-            # avg_time, avg_memory, out_len = benchmark_function(sum_primes_rs_calling_in_python, {'limit':n}, name="Rust_sumprimes_calling_in_python")
-            # writer.writerow([sum_primes_rs_calling_in_python.__name__, "Rust_sumprimes_calling_in_python", n, avg_time, avg_memory, out_len])
+            avg_time, avg_memory, out_len = benchmark_function(sum_primes_rs_calling_in_python, {'limit':n}, name="Rust_sumprimes_calling_in_python")
+            writer.writerow([sum_primes_rs_calling_in_python.__name__, "Rust_sumprimes_calling_in_python", n, avg_time, avg_memory, out_len])
 
-            # avg_time, avg_memory, out_len = benchmark_function(sum_primes_numpy, {'limit':n}, name="Numpy_sumprimes")
-            # writer.writerow([sum_primes_numpy.__name__, "Numpy_sumprimes", n, avg_time, avg_memory, out_len])
+            avg_time, avg_memory, out_len = benchmark_function(sum_primes_numpy, {'limit':n}, name="Numpy_sumprimes")
+            writer.writerow([sum_primes_numpy.__name__, "Numpy_sumprimes", n, avg_time, avg_memory, out_len])
 
-            # avg_time, avg_memory, out_len = benchmark_function(sum_primes_wo_rust, {'limit':n}, name="Python_sumprimes")
-            # writer.writerow([sum_primes_wo_rust.__name__, "Python_sumprimes", n, avg_time, avg_memory, out_len])
+            avg_time, avg_memory, out_len = benchmark_function(sum_primes_wo_rust, {'limit':n}, name="Python_sumprimes")
+            writer.writerow([sum_primes_wo_rust.__name__, "Python_sumprimes", n, avg_time, avg_memory, out_len])
 
 
-            # # Rust return array vs only number 
-            # avg_time, avg_memory, out_len = benchmark_function(get_primes_rs, {'limit':n}, name="Rust_return_array")
-            # writer.writerow([get_primes_rs.__name__, "Rust_return_array", n, avg_time, avg_memory, out_len])
+            # Rust return array vs only number 
+            avg_time, avg_memory, out_len = benchmark_function(get_primes_rs, {'limit':n}, name="Rust_return_array")
+            writer.writerow([get_primes_rs.__name__, "Rust_return_array", n, avg_time, avg_memory, out_len])
 
-            # avg_time, avg_memory, out_len = benchmark_function(get_last_prime_rs, {'limit':n}, name="Rust_return_number")
-            # writer.writerow([get_last_prime_rs.__name__, "Rust_return_number", n, avg_time, avg_memory, out_len])
+            avg_time, avg_memory, out_len = benchmark_function(get_last_prime_rs, {'limit':n}, name="Rust_return_number")
+            writer.writerow([get_last_prime_rs.__name__, "Rust_return_number", n, avg_time, avg_memory, out_len])
 
 
             # Multithread calc pi
