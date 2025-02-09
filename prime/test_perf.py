@@ -105,8 +105,11 @@ with open('benchmark_results.csv', 'w', newline='', encoding='utf-8') as csvfile
 
         # Multithread calc pi
 
-        avg_time, avg_memory, out_len = benchmark_function(estimate_pi_rust, {'limit':n}, name="Rust_estimate_pi")
+        avg_time, avg_memory, out_len = benchmark_function(estimate_pi_rust, {'limit':n, 'threads':4}, name="Rust_estimate_pi")
         writer.writerow([estimate_pi_rust.__name__, "Rust_estimate_pi", n, avg_time, avg_memory, out_len])
+
+        avg_time, avg_memory, out_len = benchmark_function(estimate_pi_rust, {'limit':n, 'threads':1}, name="Rust_estimate_pi_single_thread")
+        writer.writerow([estimate_pi_rust.__name__, "Rust_estimate_pi_single_thread", n, avg_time, avg_memory, out_len])
 
         avg_time, avg_memory, out_len = benchmark_function(estimate_pi_raw_multi_thread, {'limit':n}, name="Python_estimate_pi")
         writer.writerow([estimate_pi_raw_multi_thread.__name__, "Python_estimate_pi", n, avg_time, avg_memory, out_len])

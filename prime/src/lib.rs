@@ -94,10 +94,10 @@ fn fft_convolve(signal: Vec<f32>, kernel: Vec<f32>) -> Vec<f32> {
 }
 
 #[pyfunction]
-fn estimate_pi_rust(limit: usize) -> PyResult<f64> {
+fn estimate_pi_rust(limit: usize, threads: usize) -> PyResult<f64> {
     // Create a temporary thread pool with 4 threads
     let pool = rayon::ThreadPoolBuilder::new()
-        .num_threads(4)
+        .num_threads(threads)
         .build()
         .unwrap();
 
