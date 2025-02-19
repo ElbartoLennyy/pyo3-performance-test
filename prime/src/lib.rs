@@ -84,7 +84,6 @@ fn fft_convolve(signal: Vec<f32>, kernel: Vec<f32>) -> Vec<f32> {
     ifft.process(&mut signal_buffer);
 
     // Convert the complex result to real and normalize by fft_size
-    // (rustfft does not automatically scale the output)
     let mut output = vec![0.0_f32; conv_length];
     for i in 0..conv_length {
         output[i] = signal_buffer[i].re / (fft_size as f32);

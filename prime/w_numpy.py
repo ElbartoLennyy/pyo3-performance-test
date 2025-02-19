@@ -64,8 +64,6 @@ def fft_convolve(signal: np.ndarray, kernel: np.ndarray) -> np.ndarray:
     # Inverse FFT
     convolved = np.fft.ifft(fft_product)
 
-    # The result may have a small imaginary component due to numeric precision,
-    # so we take the real part. We also trim to the proper length.
     convolved_real = np.real(convolved[:conv_length]).astype(np.float32)
     
     return convolved_real

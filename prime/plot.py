@@ -19,8 +19,6 @@ def plot_benchmarks(mac_csv="benchmark_results.csv", win_csv="benchmark_results_
     # Set up a color cycle
     colors = plt.cm.tab10(np.linspace(0, 1, 10))
 
-    # We assume the CSV has the following columns:
-    # ['Function_Name', 'Type', 'N', 'Average_Time', 'Output_Length']
 
     # Convert N to numeric if not already
     df['N'] = pd.to_numeric(df['N'], errors='coerce')

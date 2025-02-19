@@ -125,16 +125,16 @@ def run_benchmarks():
     return results
 
 def save_results(results, filename='benchmark_results.csv'):
-    # Ensure the directory exists
+
     os.makedirs(os.path.dirname(filename) if os.path.dirname(filename) else '.', exist_ok=True)
     
-    # Write results with explicit newline handling for Windows compatibility
+
     with open(filename, 'w', newline='', encoding='utf-8') as csvfile:
         writer = csv.writer(csvfile)
         writer.writerow(['Function_Name', 'Type', 'N', 'Average_Time', 'Average_Memory_MB', 'Output_Length'])
         writer.writerows(results)
         csvfile.flush()
-        os.fsync(csvfile.fileno())  # Ensure data is written to disk
+        os.fsync(csvfile.fileno())  
 
 if __name__ == '__main__':
     freeze_support()
